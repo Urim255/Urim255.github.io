@@ -1,11 +1,11 @@
 # Setup
-title: Not Pure Poole
-description: A simple, beautiful, and powerful Jekyll theme for blogs
-url: https://vszhub.github.io
-avatar: /avatar.jpeg
+title: Urim Yang
+description: Undergraduate student
+url: https://urim255.github.io
+avatar: /goose.jpg
 paginate: 5
 permalink: pretty
-cover_image: /bg.jpeg
+cover_image: /goose0.jpg
 
 # Gems
 plugins:
