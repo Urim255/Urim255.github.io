@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Urim Yang's personal blog about computer science, Rust programming, and networking.">
+    <meta property="og:title" content="Urim Yang's Blog">
+    <meta property="og:image" content="URL_to_image.jpg">
+    <meta property="og:description" content="Personal blog about Rust, networking, and more.">
+    <title>Urim Yang's Blog</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="./site_photo/kumquat_icon.jpg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background: #f8f8f8;
+        }
+
+        .header {
+            height: 400px;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .communication-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .object {
+            width: 80px;
+            height: 80px;
+            background: #FB9912;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .object::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid #FB9912;
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .signal {
+            position: absolute;
+            height: 2px;
+            background: #FB9912;
+            top: 50%;
+            opacity: 0;
+        }
+
+        .syn {
+            width: 40%;
+            left: 20%;
+            animation: sendSignal 3s infinite;
+        }
+
+        .syn-ack {
+            width: 40%;
+            right: 20%;
+            animation: sendSignal 3s infinite;
+            animation-delay: 1s;
+        }
+
+        .ack {
+            width: 60%;
+            left: 20%;
+            animation: sendSignal 3s infinite;
+            animation-delay: 2s;
+        }
+
+        @keyframes sendSignal {
+            0% { transform: scaleX(0); opacity: 0; }
+            20% { transform: scaleX(1); opacity: 1; }
+            40% { transform: scaleX(1); opacity: 1; }
+            60% { transform: scaleX(0); opacity: 0; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+
+        .connection-label {
+            position: absolute;
+            color: #FB9912;
+            font-size: 0.8rem;
+            opacity: 0;
+        }
+
+        .syn-label {
+            top: 30%;
+            left: 45%;
+            animation: fadeLabel 3s infinite;
+        }
+
+        .syn-ack-label {
+            top: 30%;
+            right: 45%;
+            animation: fadeLabel 3s infinite;
+            animation-delay: 1s;
+        }
+
+        .ack-label {
+            top: 60%;
+            left: 45%;
+            animation: fadeLabel 3s infinite;
+            animation-delay: 2s;
+        }
+
+        @keyframes fadeLabel {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            40% { opacity: 1; }
+            60% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        .site-title {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .nav {
+            background: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #FB9912;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .post {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+        }
+
+        .post h2 {
+            color: #FB9912;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .post-content {
+            color: #444;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .communication-container {
+                width: 400px;
+                height: 150px;
+            }
+
+            .site-title {
+                font-size: 2rem;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="communication-container">
+            <div class="object"></div>
+            <div class="object"></div>
+            <div class="signal syn"></div>
+            <div class="signal syn-ack"></div>
+            <div class="signal ack"></div>
+            <div class="connection-label syn-label">SYN</div>
+            <div class="connection-label syn-ack-label">SYN-ACK</div>
+            <div class="connection-label ack-label">ACK</div>
+        </div>
+        <h1 class="site-title">Initiate, Acknowledge, Establish</h1>
+    </header>
+
+    <nav class="nav">
+        <a href="./index.html" class="nav-item">Home</a>
+        <a href="./projects.html" class="nav-item">Projects</a>
+        <a href="./news.html" class="nav-item">News</a>
+        <a href="./posts.html" class="nav-item">Posts</a>
+        <a href="./publications.html" class="nav-item active">Publications</a>
+        <a href="./cv.html" class="nav-item">CV</a>
+    </nav>
+
+    <main class="container">
+        <article class="post">
+            <a href="publication1.html"></a>
+            <h2>Publication 1: Optimizing Network Latency</h2>
+            <img src="./site_photo/pub1.jpg" alt="Network Latency">
+            <div class="post-content">
+                <p>An academic paper exploring techniques to reduce latency in large-scale networks.</p>
+            </div>
+        </article>
+
+        <article class="post">
+            <a href="publication2.html"></a>
+            <h2>Publication 2: Secure Data Protocols</h2>
+            <img src="./site_photo/pub2.jpg" alt="Secure Protocols">
+            <div class="post-content">
+                <p>A detailed analysis of encryption protocols for secure data transmission.</p>
+            </div>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Urim Yang. Connection established. Powered by Kumquat</p>
+        <p>Contact me at: <a href="mailto:enlimu36@unist.ac.kr" style="color: #FB9912;">enlimu36@unist.ac.kr</a></p>
+        <p>
+            Follow me:
+            <a href="https://github.com/Urim255" target="_blank" style="color: #FB9912;">GitHub</a> |
+            <a href="" target="_blank" style="color: #FB9912;">Blank</a>
+        </p>
+    </footer>
+</body>
+</html>
