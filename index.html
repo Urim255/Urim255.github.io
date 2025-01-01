@@ -9,12 +9,39 @@
     <meta property="og:description" content="Personal blog about Rust, networking, and more.">
     <title>Urim Yang's Blog</title>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="icon" href="./site_photo/kumquat_icon.jpg" type="image/x-icon">
+    <link rel="icon" href="/site_photo/kumquat_icon.jpg" type="image/x-icon">
     <style>
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 2rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1rem; }
+
+        .post-markdown {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            display: flex;
+            gap: 1rem;
+            flex-direction: column; /* Ensure vertical stacking */
+        }
+
+        .post-markdown img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .post-markdown div {
+            flex: 1;
+        }
+
         a {
             text-decoration: none;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -222,14 +249,33 @@
         }
 
         @media (max-width: 768px) {
-            .communication-container {
-                width: 400px;
-                height: 150px;
+            .nav {
+                flex-direction: column; /* Stack nav items vertically */
+                align-items: center; /* Center the nav items */
+                gap: 1rem; /* Adjust the gap between items */
             }
 
-            .site-title {
-                font-size: 2rem;
-                bottom: 20px;
+            .nav-item {
+                width: 100%; /* Ensure each item takes the full width */
+                text-align: center; /* Center the text */
+            }
+
+            .post-markdown {
+                flex-direction: column; /* Force column layout on small screens */
+                align-items: stretch;   /* Stretch items to fit the container */
+            }
+
+            article.post {
+                flex-direction: column;
+                text-align: justify;
+            }
+
+            article.post div {
+                text-align: justify;
+            }
+
+            article.post img {
+                margin-bottom: 1rem;
             }
         }
     </style>
