@@ -6,6 +6,21 @@
         <meta name="description" content="Urim Yang's personal blog about computer science, Rust programming, and networking.">
         <link rel="icon" href="/lime_icon.png"/>
         <title>Urim Yang's Blog</title>
+
+        <!-- MathJax CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+        <script>
+            MathJax = {
+              tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']], // 인라인 수식 설정
+                displayMath: [['$$', '$$'], ['\\[', '\\]']] // 블록 수식 설정
+              }
+            };
+          </script>
+          <script async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+          <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        
         <style>
             * {
                 margin: 0;
