@@ -18,6 +18,7 @@
                 line-height: 1.6;
                 background: #f8f8f8;
                 padding: 2rem;
+                scroll-behavior: smooth;
             }
     
             .container {
@@ -31,6 +32,13 @@
                 box-shadow: 0 5px 15px rgba(0,0,0,0.05);
                 padding: 2rem;
                 margin-bottom: 1.5rem;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            /* 호버링 효과 추가 */
+            .section-block:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             }
 
             /* Text Section에 특별한 패딩 추가 */
@@ -41,8 +49,10 @@
                 text-align: justify;
             }
 
-            .text-content p {
-                text-align-last: left;
+            /* 첫 줄(제목)과 마지막 줄 왼쪽 정렬 */
+            .text-content p:first-child,
+            .text-content p:last-child {
+                text-align: left;
             }
     
             /* Content Styling */
@@ -120,6 +130,7 @@
 
             .animation-section {
                 padding: 1.5rem;
+                cursor: pointer;
             }
     
             .communication-container {
@@ -192,6 +203,7 @@
                 padding: 1rem;
                 max-width: 800px;
                 margin: 0 auto;
+                cursor: pointer;
             }
     
             .profile-image {
@@ -299,36 +311,70 @@
                     font-size: 1.2rem;
                 }
             }
+
+            /* 플로팅 Top 버튼 스타일 */
+            .floating-top-button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                background-color: #32CD32;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            .floating-top-button.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .floating-top-button:hover {
+                background-color: #28a428;
+                transform: translateY(-3px);
+            }
         </style>
     </head>
 <body>
     <div class="container">
         <!-- Animation Section -->
-        <div class="section-block animation-section">
-            <div class="communication-container">
-                <div class="object"></div>
-                <div class="object"></div>
-                <div class="signal syn"></div>
-                <div class="signal syn-ack"></div>
-                <div class="signal ack"></div>
+        <a href="/" style="text-decoration: none; color: inherit;">
+            <div class="section-block animation-section">
+                <div class="communication-container">
+                    <div class="object"></div>
+                    <div class="object"></div>
+                    <div class="signal syn"></div>
+                    <div class="signal syn-ack"></div>
+                    <div class="signal ack"></div>
+                </div>
+                <h1 class="site-title">Initiate, Acknowledge, Establish</h1>
             </div>
-            <h1 class="site-title">Initiate, Acknowledge, Establish</h1>
-        </div>
+        </a>
 
         <!-- Profile Section -->
-        <div class="section-block">
-            <div class="profile-section">
-                <img src="/profile.jpg" alt="Profile Image" class="profile-image">
-                <div class="profile-info">
-                    <h2 class="profile-name">Urim Yang</h2>
-                    <p class="profile-status">A Trailblazer Exploring Unknown Computer Network Worlds</p>
+        <a href="mailto:email@com" style="text-decoration: none; color: inherit;">
+            <div class="section-block">
+                <div class="profile-section">
+                    <img src="/profile.jpg" alt="Profile Image" class="profile-image">
+                    <div class="profile-info">
+                        <h2 class="profile-name">Urim Yang</h2>
+                        <p class="profile-status">A Trailblazer Exploring Unknown Computer Network Worlds</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
 
         <!-- Text Section -->
         <div class="section-block">
-            <div class="text-content">
+            <div class="text-content" id="textContent">
                 <h1>1.1 인터넷이란 무엇인가?</h1>
 <hr />
 <p>위 질문에 답하기 위한 답하기 위한 두 가지 방법이 존재한다.</p>
@@ -461,9 +507,32 @@
         </div>
     </div>
 
+    <div class="floating-top-button" id="topButton">↑</div>
+
     <footer class="footer">
         <p>&copy; 2024 Urim Yang. Connection established.</p>
         <p>Powered by LimeDocs</p>
     </footer>
+
+    <script>
+        const topButton = document.getElementById('topButton');
+        
+        // 스크롤 위치에 따라 버튼 표시/숨김
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                topButton.classList.add('visible');
+            } else {
+                topButton.classList.remove('visible');
+            }
+        });
+
+        // 클릭 시 최상단으로 이동
+        topButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>
