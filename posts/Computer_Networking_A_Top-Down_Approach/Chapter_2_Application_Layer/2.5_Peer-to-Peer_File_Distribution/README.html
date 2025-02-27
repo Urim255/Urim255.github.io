@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Urim Yang's personal blog about computer science, Rust programming, and networking.">
+        <link rel="icon" href="/lime_icon.png"/>
+        <title>Urim Yang's Blog</title>
+
+        <!-- MathJax CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+        <script>
+            MathJax = {
+              tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']], // 인라인 수식 설정
+                displayMath: [['$$', '$$'], ['\\[', '\\]']] // 블록 수식 설정
+              }
+            };
+          </script>
+          <script async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+          <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            body {
+                font-family: 'Arial', sans-serif;
+                line-height: 1.6;
+                background: #f8f8f8;
+                padding: 2rem;
+                scroll-behavior: smooth;
+            }
+    
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+    
+            .section-block {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                padding: 2rem;
+                margin-bottom: 1.5rem;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            /* 호버링 효과 추가 */
+            .section-block:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            }
+
+            /* Text Section에 특별한 패딩 추가 */
+            .text-content {
+                padding: 0 2rem;
+                max-width: 800px;
+                margin: 0 auto;
+                text-align: justify;
+            }
+
+            /* 첫 줄(제목)과 마지막 줄 왼쪽 정렬 */
+            .text-content p:first-child,
+            .text-content p:last-child {
+                text-align: left;
+            }
+    
+            /* Content Styling */
+            /* Lists */
+            .section-block ul,
+            .section-block ol {
+                padding-left: 2rem;
+                margin: 1rem 0;
+            }
+
+            .section-block ul ul,
+            .section-block ol ol,
+            .section-block ul ol,
+            .section-block ol ul {
+                margin: 0.5rem 0;
+            }
+
+            /* Inline Code */
+            code:not(pre code) {
+                background-color: #f5f5f5;
+                padding: 0.2em 0.4em;
+                border-radius: 3px;
+                font-family: monospace;
+            }
+
+            /* Blockquote */
+            blockquote {
+                border-left: 4px solid #32CD32;
+                padding-left: 1rem;
+                margin: 1rem 0;
+                color: #666;
+                background-color: #f9f9f9;
+                padding: 1rem;
+            }
+
+            /* Tables */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1rem auto;
+                text-align: center;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 0.8rem;
+            }
+
+            th {
+                background-color: #f5f5f5;
+            }
+
+            /* Images */
+            img:not(.profile-image) {
+                display: block;
+                max-width: 100%;
+                margin: 1rem auto;
+                border-radius: 5px;
+            }
+
+            /* Code Blocks */
+            pre {
+                background-color: #f5f5f5;
+                padding: 1rem;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 1rem 0;
+            }
+
+            pre code {
+                font-family: monospace;
+                display: block;
+                line-height: 1.5;
+            }
+
+            .animation-section {
+                padding: 1.5rem;
+                cursor: pointer;
+            }
+    
+            .communication-container {
+                position: relative;
+                width: 500px;
+                height: 100px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    
+            .object {
+                width: 50px;
+                height: 50px;
+                background: #32CD32;
+                border-radius: 50%;
+                position: relative;
+            }
+    
+            .object::after {
+                content: '';
+                position: absolute;
+                top: -5px;
+                left: -5px;
+                right: -5px;
+                bottom: -5px;
+                border: 2px solid #32CD32;
+                border-radius: 50%;
+                opacity: 0;
+                animation: pulse 2s infinite;
+            }
+    
+            @keyframes pulse {
+                0% { transform: scale(1); opacity: 0.8; }
+                100% { transform: scale(1.5); opacity: 0; }
+            }
+    
+            .signal {
+                position: absolute;
+                height: 2px;
+                background: #32CD32;
+                top: 50%;
+                opacity: 0;
+            }
+    
+            .syn { width: 40%; left: 20%; animation: sendSignal 3s infinite; }
+            .syn-ack { width: 40%; right: 20%; animation: sendSignal 3s infinite 1s; }
+            .ack { width: 60%; left: 20%; animation: sendSignal 3s infinite 2s; }
+    
+            @keyframes sendSignal {
+                0% { transform: scaleX(0); opacity: 0; }
+                20% { transform: scaleX(1); opacity: 1; }
+                40% { transform: scaleX(1); opacity: 1; }
+                60% { transform: scaleX(0); opacity: 0; }
+                100% { transform: scaleX(0); opacity: 0; }
+            }
+    
+            .site-title {
+                text-align: center;
+                font-size: 1.8rem;
+                margin-top: 1rem;
+                color: #333;
+            }
+    
+            .profile-section {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 1rem;
+                max-width: 800px;
+                margin: 0 auto;
+                cursor: pointer;
+            }
+    
+            .profile-image {
+                width: 90px;
+                height: 90px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #32CD32;
+                flex-shrink: 0;
+            }
+    
+            .profile-info {
+                flex: 1;
+                text-align: left;
+            }
+    
+            .profile-name {
+                font-size: 1.4rem;
+                color: #333;
+                margin-bottom: 0.3rem;
+            }
+    
+            .profile-status {
+                font-size: 0.95rem;
+                color: #666;
+                font-style: italic;
+                line-height: 1.4;
+            }
+    
+            .footer {
+                text-align: center;
+                padding: 1.5rem;
+                color: #666;
+                font-size: 0.9rem;
+            }
+    
+            .footer a {
+                color: #32CD32;
+                text-decoration: none;
+            }
+    
+            /* 반응형 디자인 */
+            @media (max-width: 768px) {
+                body {
+                    padding: 1rem;
+                }
+    
+                .section-block {
+                    padding: 1.25rem;
+                }
+
+                .text-content {
+                    padding: 0 1rem;
+                }
+    
+                .communication-container {
+                    width: 300px;
+                    height: 70px;
+                }
+    
+                .object {
+                    width: 35px;
+                    height: 35px;
+                }
+    
+                .site-title {
+                    font-size: 1.4rem;
+                }
+            }
+    
+            @media (max-width: 600px) {
+                .profile-section {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 0.8rem;
+                    padding: 0.8rem;
+                }
+    
+                .profile-info {
+                    text-align: center;
+                }
+    
+                .profile-image {
+                    width: 75px;
+                    height: 75px;
+                }
+
+                .text-content {
+                    padding: 0 0.8rem;
+                }
+            }
+    
+            @media (max-width: 480px) {
+                .communication-container {
+                    width: 220px;
+                    height: 50px;
+                }
+    
+                .object {
+                    width: 25px;
+                    height: 25px;
+                }
+    
+                .site-title {
+                    font-size: 1.2rem;
+                }
+            }
+
+            /* 플로팅 Top 버튼 스타일 */
+            .floating-top-button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                background-color: #32CD32;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            .floating-top-button.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .floating-top-button:hover {
+                background-color: #28a428;
+                transform: translateY(-3px);
+            }
+        </style>
+    </head>
+<body>
+    <div class="container">
+        <!-- Animation Section -->
+        <a href="/" style="text-decoration: none; color: inherit;">
+            <div class="section-block animation-section">
+                <div class="communication-container">
+                    <div class="object"></div>
+                    <div class="object"></div>
+                    <div class="signal syn"></div>
+                    <div class="signal syn-ack"></div>
+                    <div class="signal ack"></div>
+                </div>
+                <h1 class="site-title">Initiate, Acknowledge, Establish</h1>
+            </div>
+        </a>
+
+        <!-- Profile Section -->
+        <a href="mailto:email@com" style="text-decoration: none; color: inherit;">
+            <div class="section-block">
+                <div class="profile-section">
+                    <img src="/profile.jpg" alt="Profile Image" class="profile-image">
+                    <div class="profile-info">
+                        <h2 class="profile-name">Urim Yang</h2>
+                        <p class="profile-status">A Trailblazer Exploring Unknown Computer Network Worlds</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <!-- Text Section -->
+        <div class="section-block">
+            <div class="text-content" id="textContent">
+                <h1>2.5 P2P 파일 분배</h1>
+<hr />
+<h3>개요</h3>
+<p>지금까지 항상 켜져 있는 인프라스트럭처 서버에 상당히 의존하는 클라이언트-서버 구조를 살펴보았다. 이 절에서는 커다란 파일을 한 서버에서 다수의 호스트(피어라고 부름)로 분배하는 P2P 애플리케이션을 다룰 것이다.</p>
+<h3>P2P 구조의 확장성</h3>
+<p>클라이언트-서버 구조와 P2P 구조를 비교하기 위해, 그리고 P2P 고유의 자가 확장성을 설명하기 위해 두 가지 구조 유형에 대해 한 파일을 고정된 수의 피어들에게 분해하는 간단한 양적 모델을 고려한다.</p>
+<h4>클라이언트-서버 구조의 분배 시간</h4>
+<p><img src="../Figure_2/Figure_2.22.png" alt="그림 2.22 파일 분배 문제의 예" /></p>
+<blockquote>
+<p>❓ 그림 2.22에 보이는 것처럼, 서버와 피어들은 접속 링크로 인터넷에 연결되어 있다. 서버의 접속 링크 업로드 속도를 $u_s$로 $i$번째 피어의 접속 링크 업로드 속도는 $u_i$로, 그리고 $i$번째 피어의 접속 링크 다운로드 속도는  $d_i$로 나타낸다. 또한 분배되는 파일의 크기는 $F$(비트), 파일의 복사본을 얻고자 하는 피어들의 수는 $N$으로 나타낸다.</p>
+</blockquote>
+<ul>
+<li><strong>분배 시간(distribution time)</strong>: 모든 $N$개의 피어들이 파일의 복사본을 얻는 데 걸리는 시간</li>
+<li>클라이언트-서버와 P2P 구조 모두의 경우, 인터넷 코어가 풍부한 대역폭을 갖고 있다는 간단한 가정을 하며, 모든 병목 현상은 네트워크 접속 부분에 있다. 클라이언트-서버는 다른 네트워크 애플리케이션에 참여하지 않아서 이 파일 분배에 모든 자원이 활용된다고 가정한다. </li>
+<li>클라이언트-서버 분배 시간을 $D_{cs}$라고 하자.</li>
+<li>서버는 파일 복사본을 $N$개의 피어 각각에게 전송해야 한다. 따라서 서버는 $NF$ 비트를 전송해야 한다. 서버의 업로드 속도가 $u_s$이기 때문에 파일을 분배하는 시간은 적어도 $NF/u_s$다.</li>
+</ul>
+<ul>
+<li>$d_\min$이 가장 낮은 다운로드 속도를 가진 피어의 다운로드 속도를 나타낸다고 하자. 즉 $d_\min=\min{d_1,d_2,\ldots,d_N}$이다. 가장 낮은 다운로드 속도를 가진 피어는 $F/d_\min$초보다 작은 시간에 파일의 모든 $F$비트를 얻을 수 없다. 따라서 최소 분배 시간은 적어도 $F/d_\min$이다.</li>
+</ul>
+<ul>
+<li>이러한 관찰을 결합하면 다음 수식을 얻는다. 이는 클라이언트-서버 구조에 대한 최소 분배 시간의 하한값을 제공한다.
+$$D_{cs}\geq\max\left(\frac{NF}{u_s},\frac{F}{d_\min}\right)$$</li>
+</ul>
+<ul>
+<li>위 하한값을 실제 분배 시간으로 채택할 수 있다. 즉,
+$$D_{cs}=\max\left(\frac{NF}{u_s},\frac{F}{d_\min}\right)$$</li>
+</ul>
+<ul>
+<li>$N$이 충분히 크다면, 클라이언트-서버 분배 시간은 $NF/u_s$에 비례하며, 선형적으로 분배 시간이 증가할 것이다.</li>
+</ul>
+<h4>P2P 구조의 분배 시간</h4>
+<blockquote>
+<p>❓ 그림 2.22에서 한 피어를 서버, 나머지 피어들을 클라이언트로 변형시킨 구조라고 생각해보자.</p>
+</blockquote>
+<ul>
+<li>각 피어들이 서버가 파일을 분배하는 데 도움을 줄 수 있다.</li>
+<li>한 피어가 파일 데이터 일부를 수신할 때, 피어는 그 데이터를 다른 피어들에게 재분배하는 데 자신의 업로드 용량을 이용할 수 있다.</li>
+<li>분배 시간은 각 피어가 다른 피어들에게 파일의 일부를 어떻게 분배하느냐에 달려 있기에 조금 더 복잡하다.</li>
+<li>서버는 적어도 한 번은 파일을 업로드 해야 한다. 나머지 피어들이 그들 사이에 이 비트를 재분배 할 수 있기 때문에 $N$은 여기서는 붙지 않는다. 따라서 최소 분배 시간은 $F/u_s$다.</li>
+<li>가장 낮은 다운로드 속도를 가진 피어보다 적은 시간 안에 모든 $F$비트를 얻을 수 없다. 따라서 최소 분배 시간은 $F/d_\min$이다.</li>
+<li>시스템의 전체 업로드 용량은 전체적으로 서버의 업로드 속도와 각 피어들의 속도를 더한 것이다. 즉 $u_\text{total}=u_s+u_1+\cdots+u_N$이다. 시스템은 $N$개 피어들 각각에게 $F$비트를 전달(업로드) 해야 한다. $u_\text{total}$보다 더 빠른 속도로 할 수는 없다. 따라서 최소 분배 시간은 $NF/(u_s+u_1+\cdots+u_N)$다.</li>
+<li>이 세 가지 관찰을 결합하면, P2P에 대한 최소 분배 시간($D_\text{P2P}$로 표기)을 다음과 같이 얻을 수 있다.
+$$D_\text{P2P}\geq\max\left(\frac{F}{u_s},\frac{F}{d_\min},\frac{NF}{u_s+\sum_{i=1}^{N}u_i}\right)$$</li>
+</ul>
+<ul>
+<li>각 피어가 비트를 수신하자마자 그 비트를 재분배할 수도 있지만 현실에서는 개별적인 비트보다는 파일의 청크(chunk)가 재분배된다. 위 식은 실제 최소 분배 시간에 대한 좋은 근삿값을 제공한다.
+$$D_\text{P2P}=\max\left(\frac{F}{u_s},\frac{F}{d_\min},\frac{NF}{u_s+\sum_{i=1}^{N}u_i}\right)$$</li>
+</ul>
+<h4>클라이언트-서버 구조 vs. P2P 구조</h4>
+<p><img src="../Figure_2/Figure_2.23.png" alt="그림 2.23 P2P 구조와 클라이언트-서버 구조의 분배 시간" />
+그림 2.23은 모든 피어가 같은 업로드 속도 $u$를 갖고 있다고 가정하고 클라이언트-서버와 P2P 구조애 대한 최소 분배 시간을 비교하고 있다. 
+→ 여기서 $F/u=1$시간, $u_s=10u$, $d_\min\geq u_s$ 로 설정했다. 따라서 피어는 전체 파일을 한 시간 안에 보낼 수 있고, 서버 전송률은 피어 업로드 속도의 10배이며, 피어 다운로드 속도는 영향을 받지 않을 정도로 충분히 크게 설정된다.
+→ 클라이언트-서버: 피어의 수가 증가함에 따라 분배 시간이 선형적으로 그리고 한계 없이 증가하는 것을 알 수 있다.
+→ P2P: 최소 분배 시간이 클라이언트-서버 구조의 분배 시간보다 항상 작지는 않으나, <code>임의의</code> 피어 수 $N$에 대해 한 시간보다 작다. 따라서 P2P 구조를 가진 애플리케이션은 자가 확장성을 갖는다. 이 확장성은 피어가 비트의 소비자이자 재분배자인 것의 직접적인 결과다.</p>
+<h3>비트토렌트</h3>
+<ul>
+<li>파일 분배를 위한 인기 있는 P2P 프로토콜</li>
+<li>비트토렌트 용어로 특정 파일의 분배에 참여하는 모든 피어의 모임을 <code>토렌트(torrent)</code>라고 부른다.</li>
+</ul>
+<h4>청크(chunk)</h4>
+<ul>
+<li>토렌트에 참여하는 피어들은 서로에게서 같은 크기의 <code>청크(chunk)</code>를 다운로드한다(일반적으로 256KB).</li>
+<li>처음 토렌트에 가입한 피어에는 청크가 없지만 시간이 지남에 따라 점점 많은 청크를 쌓을 수 있다.</li>
+<li>피어가 청크를 다운로드할 때 피어는 또한 청크를 다른 피어들에게 업로드한다.</li>
+<li>일단 한 피어가 전체 파일을 얻으면, 토렌트를 (이기적으로) 떠날 수 있거나 혹은 (이타적으로) 토렌트에 남아서 다른 피어들로 청크를 계속해서 업로드할 수 있다.</li>
+<li>어떤 피어는 일부 청크만을 가진 채로 토렌트를 떠날 수 있으며, 나중에 토렌트에 재가입할 수 있다.</li>
+</ul>
+<h3>비트토렌트의 동작</h3>
+<h4>트래커(tracker)</h4>
+<ul>
+<li>각 토렌트는 <code>트래커(tracker)</code>라고 부르는 인프라스트럭처 노드를 갖고 있다.</li>
+<li>한 피어가 토렌트에 가입할 때 트래커에 자신을 등록하고 주기적으로 자신이 아직 토렌트에 있음을 알린다.</li>
+<li>이러한 방식으로 트래커는 토렌트에 참여하는 피어들을 추적한다. 주어진 토렌트는 어느 순간에 수백 혹은 수천의 피어들이 참여하고 있을 수 있다.</li>
+</ul>
+<h4>동작 예시</h4>
+<p><img src="../Figure_2/Figure_2.24.png" alt="그림 2.24 비트토렌트의 파일 분배" /></p>
+<blockquote>
+<p>그림 2.24에 보이는 것처럼, 새로운 피어 앨리스가 토렌트에 가입할 때를 생각해보자.</p>
+</blockquote>
+<ol>
+<li>트래커는 참여하고 있는 피어 집합 중 임의로 50개를 선택하여 이들의 IP 주소를 앨리스에게 보낸다.</li>
+<li>앨리스는 50개의 피어와 동시에 TCP 연결을 설정한다. → 성공적으로 연결된 피어는 ’이웃 피어’다.</li>
+<li>시간이 지남에 따라 일부 피어는 떠나고 새로운 피어들이 앨리스와 TCP 연결을 시도한다.</li>
+<li>임의의 주어진 시간에 각 피어들은 파일 청크들의 일부를 가지고 있고, 서로 다른 부분을 가지고 있을 것이다.</li>
+<li>주기적으로 앨리스는 TCP 연결을 통해 이웃 피어들이 갖고 있는 청크 목록을 요구한다. ($L$개의 이웃을 갖고 있다면, 그녀는 $L$개의 청크 목록을 얻을 것이다). 그리고 가지고 있지 않은 청크에 대해 TCP 연결을 통해 요구한다.</li>
+</ol>
+<blockquote>
+<p>❓ 그렇다면 이웃으로부터 어느 청크를 먼저 요구할 것이고, 이웃들 중 어느 피어에게 청크를 요청할 것인가?</p>
+</blockquote>
+<h4>가장 드문 것 먼저(rarest first) 기술</h4>
+<ul>
+<li>그녀가 가지고 있지 않은 청크 중에서, 이웃 가운데 가장 드문 청크를 결정하고 그것을 먼저 요구하는 것이다.</li>
+<li>가장 드문 청크들이 더 빨리 재분배되므로 토렌트에 각 청크의 복사본 수가 대략적으로 동일해진다.</li>
+</ul>
+<h4>현명한 교역(wise trading) 알고리즘</h4>
+<ul>
+<li><code>가장 빠른 속도</code>로 앨리스에게 데이터를 제공하는 이웃에게 우선순위를 주는 기법.</li>
+<li>예를 들어 가장 빠른 4개의 피어를 선정하고 10초마다 속도를 재계산하고 피어 집합을 수정한다.
+<ul>
+<li>이러한 4개의 피어를 <strong>활성화(unchoked)</strong> 되었다고 한다.</li>
+</ul>
+</li>
+<li>또한 30초마다 임의로 피어 하나를 추가로 선택하여 그것에게 청크를 보낼 수 있다.
+<ul>
+<li>임의로 선택된 피어를 밥이라고 하면 비트토렌트 용어로 밥은 <strong>낙관적으로 활성화(optimistically unchoked)</strong> 되었다고 한다.</li>
+</ul>
+</li>
+<li>앨리스는 밥의 4개 업로더 중 하나가 될 수 있으며 밥은 앨리스에게 데이터를 보내기 시작한다.
+<ul>
+<li>밥의 데이터 업로드 속도가 충분히 높으면 앨리스의 4개 업로더 중 하나가 될 수 있다.</li>
+</ul>
+</li>
+<li>앨리스는 30초마다 임의로 새로운 교역 파트너를 선택하고 그 파트너와 교역을 시작한다. 교역에 만족 시 서로를 4개의 목록에 넣고 더 좋은 파트너를 만날 때가지 교역을 계속한다.
+<ul>
+<li>총 5개 피어(4개의 ‘상위’ 피어와 하나의 탐색(probing) 피어)로 구성된다.</li>
+<li>5개 피어외의 모든 이웃 피어는 <strong>비활성화(choked)</strong> 되었다고 하며, 앨리스로부터 어떠한 청크로 받지 않는다.</li>
+</ul>
+</li>
+</ul>
+<p>→ 위 두 방법은 서로 보완적으로 작용할 수 있다.</p>
+<h4>그 외의 용어와 기법</h4>
+<ul>
+<li>비트토렌트는 조각(pieces, 미니청크), 파이프라이닝(pipelining), 무작위 우선 선택(random first selection), 마지막 게임 모드(endgame mode), 안티스너빙(anti-snubbing) 등을 포함하는 흥미로운 기법을 갖고 있다.</li>
+</ul>
+<h4>TFT(Tit-For-Tat) 전략</h4>
+<ul>
+<li>문자 그대로 “당신이 나에게 한 대로 나도 돌려준다“는 의미</li>
+<li>게임 이론에서 유래한 전략으로, 협력과 배반이 상호작용하는 상황에서 사용된다.</li>
+<li>불공정한 피어(무임승차족, free-rider)는 걸러내고 협력적인 피어와의 상호작용을 통한 단순하고도 매우 효과적인 전략이다.</li>
+</ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-top-button" id="topButton">↑</div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Urim Yang. Connection established.</p>
+        <p>Powered by LimeDocs</p>
+    </footer>
+
+    <script>
+        const topButton = document.getElementById('topButton');
+        
+        // 스크롤 위치에 따라 버튼 표시/숨김
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                topButton.classList.add('visible');
+            } else {
+                topButton.classList.remove('visible');
+            }
+        });
+
+        // 클릭 시 최상단으로 이동
+        topButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
